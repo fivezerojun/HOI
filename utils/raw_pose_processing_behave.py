@@ -85,22 +85,24 @@ num_betas = 10 # number of body parameters
 num_dmpls = 8 # number of DMPL parameters
 
 # male_bm = BodyModel(bm_fname=male_bm_path, num_betas=num_betas, num_dmpls=num_dmpls, dmpl_fname=male_dmpl_path).to(comp_device)
-male_bm = BodyModel(bm_fname=male_bm_path, num_betas=num_betas).to(comp_device)
+male_bm = BodyModel(bm_path=male_bm_path, model_type='smplh', num_betas=num_betas).to(comp_device)
 faces = c2c(male_bm.f)
 
 # female_bm = BodyModel(bm_fname=female_bm_path, num_betas=num_betas, num_dmpls=num_dmpls, dmpl_fname=female_dmpl_path).to(comp_device)
-female_bm = BodyModel(bm_fname=female_bm_path, num_betas=num_betas).to(comp_device)
+female_bm = BodyModel(bm_path=female_bm_path, model_type='smplh', num_betas=num_betas).to(comp_device)
 
 paths = []
 folders = []
 dataset_names = []
 for root, dirs, files in os.walk('./dataset/raw_behave'):
+    if len(files) == 0:
+        continue
     folders.append(root)
-    for name in files:
-        dataset_name = root.split('/')[2]
-        if dataset_name not in dataset_names:
-            dataset_names.append(dataset_name)
-        paths.append(os.path.join(root, files[-1]))
+    # for name in files:
+    dataset_name = root.split('/')[-1] #[2]
+    if dataset_name not in dataset_names:
+        dataset_names.append(dataset_name)
+    paths.append(os.path.join(root, files[0]))
 
 
 
@@ -187,7 +189,7 @@ cur_count = 0
 # %%
 import time
 for paths in group_path:
-    dataset_name = paths[0].split('/')[2]
+    dataset_name = paths[0].split('/')[3]
     pbar = tqdm(paths)
     pbar.set_description('Processing: %s'%dataset_name)
     fps = 0
@@ -215,7 +217,6 @@ for paths in group_path:
 
 # %%
 import codecs as cs
-import pandas as pd
 import numpy as np
 from tqdm import tqdm
 from os.path import join as pjoin

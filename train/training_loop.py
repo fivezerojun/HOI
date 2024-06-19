@@ -128,7 +128,7 @@ class TrainLoop:
 
         for epoch in range(self.num_epochs):
             print(f'Starting epoch {epoch}')
-            for motion, cond in tqdm(self.data):
+            for motion, cond in self.data: #tqdm(self.data):
                 if not (not self.lr_anneal_steps or self.step + self.resume_step < self.lr_anneal_steps):
                     break
 
@@ -240,10 +240,10 @@ class TrainLoop:
 
 
             if last_batch or not self.use_ddp:
-                losses = self.compute_losses(micro,t, micro_cond)
+                losses = self.compute_losses(micro, t, micro_cond)
             else:
                 with self.ddp_model.no_sync():
-                    losses = self.compute_losses(micro,t, micro_cond)
+                    losses = self.compute_losses(micro, t, micro_cond)
 
             if isinstance(self.schedule_sampler, LossAwareSampler):
                 self.schedule_sampler.update_with_local_losses(

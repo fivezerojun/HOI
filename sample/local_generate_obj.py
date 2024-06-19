@@ -158,6 +158,7 @@ def main():
 
 
         if args.guidance:
+            # with torch.autograd.set_detect_anomaly(True):
             guide_fn_contact = Guide_Contact(
                                             inv_transform_th=data.dataset.t2m_dataset.inv_transform_th,
                                             mean=data.dataset.t2m_dataset.mean,
@@ -360,7 +361,7 @@ def load_afford_dataset(args, training_stage=1):
     data = get_dataset_loader(data_conf)
     return data
 
-def load_motion_dataset(args, max_frames, n_frames, training_stage=2): 
+def load_motion_dataset(args, max_frames, n_frames, training_stage=2):
     data_conf = DatasetConfig(
         name=args.dataset,
         batch_size=args.batch_size,

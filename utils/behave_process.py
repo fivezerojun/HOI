@@ -1,3 +1,5 @@
+###### split the behave motion annotations based on the action annotations, I think it splits the frames which don't interact with the object #####
+
 import json
 import os
 import os.path as osp

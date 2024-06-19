@@ -2,7 +2,7 @@ import math
 import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
-plt.rcParams['animation.ffmpeg_path'] = '/shared/centos7/ffmpeg/20190305/bin/ffmpeg'
+plt.rcParams['animation.ffmpeg_path'] = '/usr/bin/ffmpeg'
 from mpl_toolkits.mplot3d import Axes3D
 from matplotlib.animation import FuncAnimation, FFMpegFileWriter
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection
@@ -94,8 +94,9 @@ def plot_3d_motion(save_path, kinematic_tree, joints, obj_points, hc_mask, oc_ma
 
     def update(index):
         #         print(index)
-        ax.lines = []
-        ax.collections = []
+        ax.clear()
+        # ax.lines = []
+        # ax.collections = []
         ax.view_init(elev=120, azim=-90)
         ax.dist = 7.5
 

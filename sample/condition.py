@@ -94,14 +94,12 @@ class Guide_Contact:
         
             contact_loss= torch.zeros(0).to(x.device)
 
-
             all_loss_static = torch.zeros(0).to(x.device)
             all_loss_static_xz = torch.zeros(0).to(x.device)
 
             all_local_rot = torch.zeros(0).to(x.device)
             all_close_points_loss = torch.zeros(0).to(x.device)
-
-
+            all_pred_points = torch.zeros_like(obj_points).to(x.device).unsqueeze(1).repeat(1, T,1,1)
             for i in range(B):
 
                               
@@ -115,16 +113,15 @@ class Guide_Contact:
                 obj_normal = obj_normals[i]
                 pred_angle, pred_trans = obj_output[i, :, :3].transpose(1,0), obj_output[i, :, 3:].transpose(1,0)
                 pred_rot = axis_angle_to_matrix(pred_angle.transpose(1,0))
-                all_pred_points = torch.matmul(obj_points[i].float().unsqueeze(0), pred_rot.permute(0, 2, 1)) + pred_trans.transpose(1, 0).unsqueeze(1)
-                
+                all_pred_points[i] = torch.matmul(obj_points[i].clone().float().unsqueeze(0), pred_rot.permute(0, 2, 1)) + pred_trans.transpose(1, 0).unsqueeze(1)
 
                 if contact_idxs[i].any() !=-1:
                     sel_joints = np.array([0,9,10,11,16,17,20,21])
-                    o_afford_labels[i] = o_afford_labels[i]
+                    # o_afford_labels[i] = o_afford_labels[i]
                     sel_idx = sel_joints[contact_idxs[i]]
-                    loss_contact = torch.norm((joints_output[i, :, sel_idx,:] - all_pred_points[:, o_afford_labels[i],  :]), dim=-1)
+                    seleted_all_pred_points = all_pred_points[i, :, o_afford_labels[i], :]
+                    loss_contact = torch.norm((joints_output[i, :, sel_idx,:] - seleted_all_pred_points), dim=-1)
                     contact_loss = torch.cat([contact_loss, loss_contact.sum(-1).unsqueeze(0)], dim=0)
-
 
             total_loss_contact = contact_loss.sum()
 

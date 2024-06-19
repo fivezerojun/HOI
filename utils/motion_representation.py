@@ -12,7 +12,6 @@ import os
 from trimesh import Trimesh
 import trimesh
 from scipy.spatial.transform import Rotation
-from skel_vis import plot
 from scipy import signal
 
 simplified_mesh = {

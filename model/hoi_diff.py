@@ -104,7 +104,7 @@ class HOIDiff(MDM):
             emb += self.mask_cond(action_emb, force_mask=force_mask)
 
         x_human = self.input_process(x_human)
-        x_obj =  self.input_process_obj(x_obj)
+        x_obj = self.input_process_obj(x_obj)
 
 
 
